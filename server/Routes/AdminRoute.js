@@ -60,7 +60,7 @@ router.post('/add_employee', upload.single('image'),(req, res) => {
     // console.log(req.body);
     const {phoneno}=req.body;
     if (! /^\d{10}$/.test(phoneno)){
-        return res.json({ Status: false, Error: "Phone number must be exactly 10 digits" });
+        return res.json({ Status: false, Error: "Phone number not valid" });
     }
     const {email}=req.body;
     if (! /\S+@\S+\.\S+/.test(email)){
@@ -103,7 +103,12 @@ router.post('/add_employee', upload.single('image'),(req, res) => {
 })
 
 router.get('/employee', (req, res) => {
-    const sql = "SELECT * FROM employee";
+    // const sql = "SELECT * FROM employee";
+    const sql = `
+        SELECT e.*, c.name AS category_name 
+        FROM employee e 
+        LEFT JOIN category c ON e.category_id = c.id
+    `;
     con.query(sql, (err, result) => {
         if(err) return res.json({Status: false, Error: "Query Error"})
         return res.json({Status: true, Result: result})
@@ -123,8 +128,8 @@ router.put('/edit_employee/:id', (req, res) => {
     const id = req.params.id;
     const {phoneno}=req.body;
     if (! /^\d{10}$/.test(phoneno)){
-        console.log("Phone valid");
-        return res.json({ Status: false, Error: "Phone number must be exactly 10 digits" });
+        console.log("Phone not valid");
+        return res.json({ Status: false, Error: "Phone number not valid" });
     }
     const {email}=req.body;
     if (! /\S+@\S+\.\S+/.test(email)){
@@ -136,7 +141,7 @@ router.put('/edit_employee/:id', (req, res) => {
     const values = [
         req.body.name,
         req.body.email,
-        req.body.phone,
+        phoneno,
         req.body.salary,
         req.body.address,
         req.body.category_id

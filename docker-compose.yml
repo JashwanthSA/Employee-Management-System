@@ -1,0 +1,44 @@
+# version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server:/usr/src/app
+    environment:
+      - NODE_ENV=production
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=root
+      - PMA_PASSWORD=jash123
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "jash123"
+      MYSQL_DATABASE: employeems
+    volumes:
+      - db_data:/var/lib/mysql
+
+  frontend:
+    build:
+      context: ./EmployeeMS
+      ports:
+        - "5173:5173"
+      volumes:
+        - ./EmployeeMS:/usr/src/app
+
+volumes:
+  db_data:

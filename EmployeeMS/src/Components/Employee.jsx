@@ -29,7 +29,7 @@ const Employee = () => {
     })
   } 
   return (
-    <div className="px-5 mt-3">
+    <div className="container mt-4">
       <div className="d-flex justify-content-center">
         <h3>Employee List</h3>
       </div>
@@ -47,6 +47,7 @@ const Employee = () => {
               <th>Address</th>
               <th>Date of Joining</th>
               <th>Salary</th>
+              <th>Category</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -65,6 +66,7 @@ const Employee = () => {
                 <td>{e.address}</td>
                 <td>{e.date}</td>
                 <td>{e.salary}</td>
+                <td>{e.category_name}</td>
                 <td>
                   <Link
                     to={`/dashboard/edit_employee/` + e.id}
